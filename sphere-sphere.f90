@@ -23,68 +23,108 @@ MODULE SphereSphereIntersection
         ! see if radii overalp
         if ( sqrt(dot_product(A1-B1, A1-B1)) - (ra+rb) < dist ) then
             SphereSphereIntersectionCalculation = .TRUE.
-            print*, "sphere collision"
+            !print*, "sphere collision"
             return
         endif
         return 
 
     END FUNCTION SphereSphereIntersectionCalculation
 
-    ! test
-    SUBROUTINE SphereSphereIntersectionTest
+    ! testing routines !
+    SUBROUTINE SphereSphereIntersectionTestAinB
         implicit none
-        real, dimension(3) :: A1 = (/5.0,0.0,0.0/)
+        real, dimension(3) :: A1 = (/1.0,0.0,0.0/)
         real :: ra = 2
         real, dimension(3) :: B1 = (/0.0,0.0,0.0/)
         real :: rb = 20.0
         logical val
-        !real, dimension(6,100) :: lines
-        !integer :: numLines = 1
-        !integer sumLines
-        !integer i,j
-     
+    
         val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
-        print*, val 
+        if (val .NEQV. .TRUE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestAinB"
+            stop
+        endif
    
-        !open(1, file="test/spherelines.dat", status='new')
-        ! set random line for initialization
-        !lines(1:3,1) = (/multFactor*RAND(), multFactor*RAND(), multFactor*RAND()/)
-        !lines(4:6,1) = lines(1:3,1) + (/lineFactor*RAND(), lineFactor*RAND(), lineFactor*RAND()/)
-        !write(1,*) lines(1,1), lines(2,1), lines(3,1), &
-        !  lines(4,1), lines(5,1), lines(6,1)
-        !do i = 1,100 ! MAKE SURE THIS MATCHES LINES DIMENSION
-        !    A1(1) = RAND()*multFactor
-        !    A1(2) = RAND()*multFactor
-        !    A1(3) = RAND()*multFactor
-        !    A2 = A1 + (/lineFactor*RAND(), lineFactor*RAND(), lineFactor*RAND()/)
-        !    sumLines = 0
-        !    do j = 1,numLines
-        !        B1 = lines(1:3, j)
-        !        B2 = lines(4:6, j)
-        !        val = SphereLineIntersectionCalculation(A1, A2, B1, r) 
-        !        if (val .NEQV. .TRUE.) then
-        !            sumLines = sumLines + 1
-        !        endif
-        !    enddo
-        !    if (sumLines == numLines) then
-        !        numLines = numLines + 1
-        !        lines(1:3,numLines) = A1
-        !        lines(4:6,numLines) = A2
-        !        write(1,*) lines(1,numLines), lines(2,numLines), lines(3,numLines), &
-        !          lines(4,numLines), lines(5,numLines), lines(6,numLines)
-        !    endif
-        !enddo
-        !close(1)
+    END SUBROUTINE SphereSphereIntersectionTestAinB
 
-    END SUBROUTINE SphereSphereIntersectionTest
+    SUBROUTINE SphereSphereIntersectionTestBinA
+        implicit none
+        real, dimension(3) :: A1 = (/1.0,0.0,0.0/)
+        real :: ra = 20
+        real, dimension(3) :: B1 = (/0.0,0.0,0.0/)
+        real :: rb = 2
+        logical val
+    
+        val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
+        if (val .NEQV. .TRUE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestBinA"
+            stop
+        endif
+   
+    END SUBROUTINE SphereSphereIntersectionTestBinA
+
+    SUBROUTINE SphereSphereIntersectionTestTangent
+        implicit none
+        real, dimension(3) :: A1 = (/1.0,0.0,0.0/)
+        real :: ra = 1
+        real, dimension(3) :: B1 = (/3.0,0.0,0.0/)
+        real :: rb = 1
+        logical val
+    
+        val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
+        if (val .NEQV. .TRUE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestTangent"
+            stop
+        endif
+
+    END SUBROUTINE SphereSphereIntersectionTestTangent
+
+    SUBROUTINE SphereSphereIntersectionTestOverlap
+        implicit none
+        real, dimension(3) :: A1 = (/1.0,0.0,0.0/)
+        real :: ra = 1
+        real, dimension(3) :: B1 = (/3.0,0.0,0.0/)
+        real :: rb = 1
+        logical val
+    
+        val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
+        if (val .NEQV. .TRUE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestOverlap"
+            stop 
+        endif
+
+    END SUBROUTINE SphereSphereIntersectionTestOverlap
+
+    SUBROUTINE SphereSphereIntersectionTestNoOverlap
+        implicit none
+        real, dimension(3) :: A1 = (/1.0,0.0,0.0/)
+        real :: ra = 1
+        real, dimension(3) :: B1 = (/3.0,0.0,0.0/)
+        real :: rb = 0.99
+        logical val
+   
+        val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
+        if (val .NEQV. .FALSE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestNoOverlap"
+            stop
+        endif
+
+    END SUBROUTINE SphereSphereIntersectionTestNoOverlap
 
 END MODULE SphereSphereIntersection
 
 ! test sphere-line intersection module
 PROGRAM SphereSphereTest 
-    use SphereSphereIntersection, only: SphereSphereIntersectionTest
+    use SphereSphereIntersection, only: SphereSphereIntersectionTestAinB, SphereSphereIntersectionTestBinA, &
+      SphereSphereIntersectionTestTangent, SphereSphereIntersectionTestOverlap, SphereSphereIntersectionTestNoOverlap
     implicit none
 
-    call SphereSphereIntersectionTest()
+    call SphereSphereIntersectionTestAinB()
+    call SphereSphereIntersectionTestBinA()
+    call SphereSphereIntersectionTestTangent()
+    call SphereSphereIntersectionTestOverlap()
+    call SphereSphereIntersectionTestNoOverlap()
+
+    print*, "SUCCESS: successful completion of all 5 sphere-sphere collision unit tests"
 
 END PROGRAM

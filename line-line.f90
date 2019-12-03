@@ -85,7 +85,7 @@ MODULE LineLineIntersection
         
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then 
-            print*, "failed LineLineIntersectionTestOverlapA1B1"
+            print*, "FAILURE: failed LineLineIntersectionTestOverlapA1B1"
             stop
         endif
 
@@ -101,7 +101,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then 
-            print*, "failed LineLineIntersectionTestOverlapA1B2"
+            print*, "FAILURE: failed LineLineIntersectionTestOverlapA1B2"
             stop
         endif
 
@@ -117,7 +117,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestOverlapA2B1"
+            print*, "FAILURE: failed LineLineIntersectionTestOverlapA2B1"
             stop
         endif
 
@@ -133,7 +133,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestOverlapA2B2"
+            print*, "FAILURE: failed LineLineIntersectionTestOverlapA2B2"
             stop
         endif
 
@@ -149,7 +149,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestSameLine"
+            print*, "FAILURE: failed LineLineIntersectionTestSameLine"
             stop
         endif
 
@@ -165,7 +165,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestParallelOverlapA1B1"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelOverlapA1B1"
             stop
         endif
 
@@ -181,7 +181,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestParallelOverlapA1B2"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelOverlapA1B2"
             stop
         endif
 
@@ -197,7 +197,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestParallelOverlapA2B1"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelOverlapA2B1"
             stop
         endif
 
@@ -213,7 +213,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestParallelOverlapA2B2"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelOverlapA2B2"
             stop
         endif
 
@@ -229,7 +229,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .FALSE.) then
-            print*, "failed LineLineIntersectionTestParallelA1B1"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelA1B1"
             stop
         endif
 
@@ -245,7 +245,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .FALSE.) then
-            print*, "failed LineLineIntersectionTestParallelA1B2"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelA1B2"
             stop
         endif
 
@@ -261,7 +261,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .FALSE.) then
-            print*, "failed LineLineIntersectionTestParallelA2B1"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelA2B1"
             stop
         endif
 
@@ -277,7 +277,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .FALSE.) then
-            print*, "failed LineLineIntersectionTestParallelA2B2"
+            print*, "FAILURE: failed LineLineIntersectionTestParallelA2B2"
             stop
         endif
 
@@ -293,7 +293,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestIntersectA1"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectA1"
             stop
         endif
 
@@ -309,7 +309,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestIntersectA2"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectA2"
             stop
         endif
 
@@ -325,7 +325,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestIntersectB1"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectB1"
             stop
         endif
 
@@ -341,7 +341,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestIntersectB2"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectB2"
             stop
         endif
 
@@ -357,7 +357,7 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "failed LineLineIntersectionTestIntersectMiddle"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectMiddle"
             stop
         endif
 
@@ -395,6 +395,6 @@ PROGRAM LineLineTest
     call LineLineIntersectionTestIntersectB2()
     call LineLineIntersectionTestIntersectMiddle()
 
-    print*, "successful completion of all 18 line-line collision unit tests"
+    print*, "SUCCESS: successful completion of all 18 line-line collision unit tests"
 
 END PROGRAM
