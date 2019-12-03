@@ -17,7 +17,7 @@ MODULE LineLineIntersection
         real, intent(in), dimension(3) :: B1
         real, intent(in), dimension(3) :: B2
         real, parameter ::  tol = 1.0e-5 ! tolerance for cooccupancy (should be small to disallow overlap)
-        real, parameter :: dist = 1 ! tolerance for collision (pseudo thickness of line)
+        real, parameter :: dist = 1.0e-3 ! tolerance for collision (pseudo thickness of line)
         real, dimension(3) :: pA ! closest point on A to B
         real, dimension(3) :: pB ! closest point on B to A
         real dotA1B1B2B1, dotB2B1A2A1, dotA1B1A2A1, dotB2B1B2B1, dotA2A1A2A1
@@ -30,7 +30,7 @@ MODULE LineLineIntersection
 
         ! check for overlap of points
         if (ALL(ABS(A1-B1) <= tol) .OR. ALL(ABS(A1-B2) <= tol) .OR. ALL(ABS(A2-B1) <= tol) .OR. ALL(ABS(A2-B2) <= tol)) then
-            print*, "collision, point overlap"
+            !print*, "collision, point overlap"
             LineLineIntersectionCalculation = .TRUE.
             return
         endif
@@ -46,7 +46,7 @@ MODULE LineLineIntersection
             ! take just the first component
             if (( (tA2(1)*tB1(1) > 0) .OR. (tA2(1)*tB2(1) > 0) ) &
               .AND. ( (abs(tA2(1)) >= abs(tB1(1))) .OR. (abs(tA2(1)) >= abs(tB2(1))) )) then
-                print*, "collision, parallel overlap"
+                !print*, "collision, parallel overlap"
                 LineLineIntersectionCalculation = .TRUE.
                 return
             else
@@ -66,7 +66,7 @@ MODULE LineLineIntersection
         pB = B1 + muB * (B2-B1)
         ! check if dist <= tol
         if ((sqrt(dot_product(pA-pB, pA-pB)) <= dist)  .AND. (abs(muA) <= 1) .AND. (abs(muB) <= 1)) then 
-            print*, "collision, intersect"
+            !print*, "collision, intersect"
             LineLineIntersectionCalculation = .TRUE.
             return 
         endif
@@ -74,60 +74,327 @@ MODULE LineLineIntersection
 
     END FUNCTION LineLineIntersectionCalculation
 
-    ! test
-    SUBROUTINE LineLineIntersectionTest
+    ! testing routines !
+    SUBROUTINE LineLineIntersectionTestOverlapA1B1
         implicit none
-        real, dimension(3) :: A1
-        real, dimension(3) :: A2 
-        real, dimension(3) :: B1 
-        real, dimension(3) :: B2
-        logical val
-        integer, parameter :: multFactor = 10
-        integer, parameter :: lineFactor = 5
-        real, dimension(6,100) :: lines
-        integer :: numLines = 1
-        integer sumLines
-        integer i,j
+        real, dimension(3) :: A1 = (/0,0,0/) 
+        real, dimension(3) :: A2 = (/1,0,0/)
+        real, dimension(3) :: B1 = (/0,0,0/)
+        real, dimension(3) :: B2 = (/-1,-1,-1/)
+        logical :: val 
         
-        open(1, file="test/lines.dat", status='new')
-        ! set random line for initialization
-        lines(1:3,1) = (/multFactor*RAND(), multFactor*RAND(), multFactor*RAND()/)
-        lines(4:6,1) = lines(1:3,1) + (/lineFactor*RAND(), lineFactor*RAND(), lineFactor*RAND()/)
-        write(1,*) lines(1,1), lines(2,1), lines(3,1), &
-          lines(4,1), lines(5,1), lines(6,1)
-        do i = 1,100 ! MAKE SURE THIS MATCHES LINES DIMENSION
-            A1(1) = RAND()*multFactor
-            A1(2) = RAND()*multFactor
-            A1(3) = RAND()*multFactor
-            A2 = A1 + (/lineFactor*RAND(), lineFactor*RAND(), lineFactor*RAND()/)
-            sumLines = 0
-            do j = 1,numLines
-                B1 = lines(1:3, j)
-                B2 = lines(4:6, j)
-                val = LineLineIntersectionCalculation(A1, A2, B1, B2) 
-                if (val .NEQV. .TRUE.) then
-                    sumLines = sumLines + 1
-                endif
-            enddo
-            if (sumLines == numLines) then
-                numLines = numLines + 1
-                lines(1:3,numLines) = A1
-                lines(4:6,numLines) = A2
-                write(1,*) lines(1,numLines), lines(2,numLines), lines(3,numLines), &
-                  lines(4,numLines), lines(5,numLines), lines(6,numLines)
-            endif
-        enddo
-        close(1)
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then 
+            print*, "failed LineLineIntersectionTestOverlapA1B1"
+            stop
+        endif
 
-    END SUBROUTINE LineLineIntersectionTest
+    END SUBROUTINE LineLineIntersectionTestOverlapA1B1
+  
+    SUBROUTINE LineLineIntersectionTestOverlapA1B2
+        implicit none
+        real, dimension(3) :: A1 = (/-11,-11,-11/)
+        real, dimension(3) :: A2 = (/-10,-10,-10/)
+        real, dimension(3) :: B1 = (/1,1,1/)
+        real, dimension(3) :: B2 = (/-10,-10,-10/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then 
+            print*, "failed LineLineIntersectionTestOverlapA1B2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestOverlapA1B2
+
+    SUBROUTINE LineLineIntersectionTestOverlapA2B1
+        implicit none
+        real, dimension(3) :: A1 = (/1,0,0/)
+        real, dimension(3) :: A2 = (/0,0,0/)
+        real, dimension(3) :: B1 = (/0,0,0/)
+        real, dimension(3) :: B2 = (/0,1,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestOverlapA2B1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestOverlapA2B1
+
+    SUBROUTINE LineLineIntersectionTestOverlapA2B2
+        implicit none
+        real, dimension(3) :: A1 = (/1,0,0/)
+        real, dimension(3) :: A2 = (/0.0001,0.00002,0.00004/)
+        real, dimension(3) :: B1 = (/0,0,1/)
+        real, dimension(3) :: B2 = (/0.0001,0.00002,0.00004/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestOverlapA2B2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestOverlapA2B2
+
+    SUBROUTINE LineLineIntersectionTestSameLine
+        implicit none
+        real, dimension(3) :: A1 = (/1,1,1/)
+        real, dimension(3) :: A2 = (/0,0,0/)
+        real, dimension(3) :: B1 = (/0,0,0/)
+        real, dimension(3) :: B2 = (/1,1,1/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestSameLine"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestSameLine
+
+    SUBROUTINE LineLineIntersectionTestParallelOverlapA1B1
+        implicit none
+        real, dimension(3) :: A1 = (/2,2,2/)
+        real, dimension(3) :: A2 = (/0,0,0/)
+        real, dimension(3) :: B1 = (/1,1,1/)
+        real, dimension(3) :: B2 = (/3,3,3/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestParallelOverlapA1B1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelOverlapA1B1
+
+    SUBROUTINE LineLineIntersectionTestParallelOverlapA1B2
+        implicit none
+        real, dimension(3) :: A1 = (/2,2,2/)
+        real, dimension(3) :: A2 = (/-100,-100,-100/)
+        real, dimension(3) :: B1 = (/100,100,100/)
+        real, dimension(3) :: B2 = (/1.5,1.5,1.5/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestParallelOverlapA1B2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelOverlapA1B2
+
+    SUBROUTINE LineLineIntersectionTestParallelOverlapA2B1
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/-100,-100,-100/)
+        real, dimension(3) :: B1 = (/-99,-99,-99/)
+        real, dimension(3) :: B2 = (/-1001,-1001,-1001/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestParallelOverlapA2B1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelOverlapA2B1
+
+    SUBROUTINE LineLineIntersectionTestParallelOverlapA2B2
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/1,1,1/)
+        real, dimension(3) :: B1 = (/2,2,2/)
+        real, dimension(3) :: B2 = (/0.999, 0.999, 0.999/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestParallelOverlapA2B2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelOverlapA2B2
+
+    SUBROUTINE LineLineIntersectionTestParallelA1B1
+        implicit none
+        real, dimension(3) :: A1 = (/2,2,2/)
+        real, dimension(3) :: A2 = (/0,0,0/)
+        real, dimension(3) :: B1 = (/2.1,2.1,2.1/)
+        real, dimension(3) :: B2 = (/3,3,3/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .FALSE.) then
+            print*, "failed LineLineIntersectionTestParallelA1B1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelA1B1
+
+    SUBROUTINE LineLineIntersectionTestParallelA1B2
+        implicit none
+        real, dimension(3) :: A1 = (/1,1,1/)
+        real, dimension(3) :: A2 = (/-100,-100,-100/)
+        real, dimension(3) :: B1 = (/100,100,100/)
+        real, dimension(3) :: B2 = (/1.5,1.5,1.5/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .FALSE.) then
+            print*, "failed LineLineIntersectionTestParallelA1B2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelA1B2
+
+    SUBROUTINE LineLineIntersectionTestParallelA2B1
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/-100,-100,-100/)
+        real, dimension(3) :: B1 = (/-100.0001,-100.0001,-100.0001/)
+        real, dimension(3) :: B2 = (/-1001,-1001,-1001/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .FALSE.) then
+            print*, "failed LineLineIntersectionTestParallelA2B1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelA2B1
+
+    SUBROUTINE LineLineIntersectionTestParallelA2B2
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/0.999, 0.999, 0.999/)
+        real, dimension(3) :: B1 = (/2,2,2/)
+        real, dimension(3) :: B2 = (/1.001,1.001,1.001/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .FALSE.) then
+            print*, "failed LineLineIntersectionTestParallelA2B2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestParallelA2B2
+
+    SUBROUTINE LineLineIntersectionTestIntersectA1
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/1,0,0/)
+        real, dimension(3) :: B1 = (/0,-1,0/)
+        real, dimension(3) :: B2 = (/0,1,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestIntersectA1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectA1
+
+    SUBROUTINE LineLineIntersectionTestIntersectA2
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/0,0,100/)
+        real, dimension(3) :: B1 = (/-200,0,100/)
+        real, dimension(3) :: B2 = (/200,0,100/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestIntersectA2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectA2
+
+    SUBROUTINE LineLineIntersectionTestIntersectB1
+        implicit none
+        real, dimension(3) :: A1 = (/-1,0,1/)
+        real, dimension(3) :: A2 = (/1,0,1/)
+        real, dimension(3) :: B1 = (/0,0,1/)
+        real, dimension(3) :: B2 = (/0,0,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestIntersectB1"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectB1
+
+    SUBROUTINE LineLineIntersectionTestIntersectB2
+        implicit none
+        real, dimension(3) :: A1 = (/0,-1,0/)
+        real, dimension(3) :: A2 = (/0,1,0/)
+        real, dimension(3) :: B1 = (/0,0,0/)
+        real, dimension(3) :: B2 = (/0,1,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestIntersectB2"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectB2
+
+    SUBROUTINE LineLineIntersectionTestIntersectMiddle
+        implicit none
+        real, dimension(3) :: A1 = (/0,-2,0/)
+        real, dimension(3) :: A2 = (/0,2,0/)
+        real, dimension(3) :: B1 = (/-2,0,0/)
+        real, dimension(3) :: B2 = (/2,0,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "failed LineLineIntersectionTestIntersectMiddle"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectMiddle
 
 END MODULE LineLineIntersection
 
 ! test line-line intersection module
 PROGRAM LineLineTest 
-    use LineLineIntersection, only: LineLineIntersectionTest
+    use LineLineIntersection, only: LineLineIntersectionTestOverlapA1B1, LineLineIntersectionTestOverlapA1B2, &
+      LineLineIntersectionTestOverlapA2B1, LineLineIntersectionTestOverlapA2B2, LineLineIntersectionTestSameLine, &
+      LineLineIntersectionTestParallelOverlapA1B1, LineLineIntersectionTestParallelOverlapA1B2, &
+      LineLineIntersectionTestParallelOverlapA2B1, LineLineIntersectionTestParallelOverlapA2B2, &
+      LineLineIntersectionTestParallelA1B1, LineLineIntersectionTestParallelA1B2, LineLineIntersectionTestParallelA2B1, &
+      LineLineIntersectionTestParallelA2B2, LineLineIntersectionTestIntersectA1, LineLineIntersectionTestIntersectA2, &
+      LineLineIntersectionTestIntersectB1, LineLineIntersectionTestIntersectB2, LineLineIntersectionTestIntersectMiddle
     implicit none
 
-    call LineLineIntersectionTest()
+    call LineLineIntersectionTestOverlapA1B1()
+    call LineLineIntersectionTestOverlapA1B2()
+    call LineLineIntersectionTestOverlapA2B1()
+    call LineLineIntersectionTestOverlapA2B2()
+    call LineLineIntersectionTestSameLine()
+    call LineLineIntersectionTestParallelOverlapA1B1()
+    call LineLineIntersectionTestParallelOverlapA1B2()
+    call LineLineIntersectionTestParallelOverlapA2B1()
+    call LineLineIntersectionTestParallelOverlapA2B2()
+    call LineLineIntersectionTestParallelA1B1()
+    call LineLineIntersectionTestParallelA1B2()
+    call LineLineIntersectionTestParallelA2B1()
+    call LineLineIntersectionTestParallelA2B2()
+    call LineLineIntersectionTestIntersectA1()
+    call LineLineIntersectionTestIntersectA2()
+    call LineLineIntersectionTestIntersectB1()
+    call LineLineIntersectionTestIntersectB2()
+    call LineLineIntersectionTestIntersectMiddle()
+
+    print*, "successful completion of all 18 line-line collision unit tests"
 
 END PROGRAM
