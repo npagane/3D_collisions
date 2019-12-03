@@ -1,4 +1,5 @@
 ! npagane | risca lab | dec 2019 | line-line intersection calculation
+! inspired from http://paulbourke.net/geometry/pointlineplane/
 
 ! define line-line intersection module that contains calculation and test
 MODULE LineLineIntersection
@@ -15,8 +16,8 @@ MODULE LineLineIntersection
         real, intent(in), dimension(3) :: A2
         real, intent(in), dimension(3) :: B1
         real, intent(in), dimension(3) :: B2
-        real, parameter ::  tol = 1.0e-5 ! tolerance for collision
-        real, parameter :: dist = 1
+        real, parameter ::  tol = 1.0e-5 ! tolerance for cooccupancy (should be small to disallow overlap)
+        real, parameter :: dist = 1 ! tolerance for collision (pseudo thickness of line)
         real, dimension(3) :: pA ! closest point on A to B
         real, dimension(3) :: pB ! closest point on B to A
         real dotA1B1B2B1, dotB2B1A2A1, dotA1B1A2A1, dotB2B1B2B1, dotA2A1A2A1
