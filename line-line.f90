@@ -370,7 +370,7 @@ MODULE LineLineIntersection
 
     END SUBROUTINE LineLineIntersectionTestIntersectMiddle
 
-    SUBROUTINE LineLineIntersectionTestIntersectProjectionCollide
+    SUBROUTINE LineLineIntersectionTestIntersectProjectionCollideZ
         implicit none
         real, dimension(3) :: A1 = (/0,0,0/)
         real, dimension(3) :: A2 = (/0,0,5/)
@@ -380,14 +380,13 @@ MODULE LineLineIntersection
 
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .TRUE.) then
-            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionCollide"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionCollideZ"
             stop
         endif
 
-    END SUBROUTINE LineLineIntersectionTestIntersectProjectionCollide
+    END SUBROUTINE LineLineIntersectionTestIntersectProjectionCollideZ
 
-
-    SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollide
+    SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollideZ
         implicit none
         real, dimension(3) :: A1 = (/-1,0,5/)
         real, dimension(3) :: A2 = (/1,0,5/)
@@ -397,12 +396,75 @@ MODULE LineLineIntersection
         
         val = LineLineIntersectionCalculation(A1,A2,B1,B2)
         if (val .NEQV. .FALSE.) then
-            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionNoCollide"
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionNoCollideZ"
             stop
         endif
 
-    END SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollide
+    END SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollideZ
 
+    SUBROUTINE LineLineIntersectionTestIntersectProjectionCollideY
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/0,5,0/)
+        real, dimension(3) :: B1 = (/-1,2,0/)
+        real, dimension(3) :: B2 = (/1,2,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionCollideY"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectProjectionCollideY
+
+    SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollideY
+        implicit none
+        real, dimension(3) :: A1 = (/-1,5,0/)
+        real, dimension(3) :: A2 = (/1,5,0/)
+        real, dimension(3) :: B1 = (/-1,2,0/)
+        real, dimension(3) :: B2 = (/1,2,0/)
+        logical :: val
+
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .FALSE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionNoCollideY"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollideY
+
+    SUBROUTINE LineLineIntersectionTestIntersectProjectionCollideX
+        implicit none
+        real, dimension(3) :: A1 = (/0,0,0/)
+        real, dimension(3) :: A2 = (/5,0,0/)
+        real, dimension(3) :: B1 = (/2,0,-1/)
+        real, dimension(3) :: B2 = (/2,0,1/)
+        logical :: val
+        
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .TRUE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionCollideX"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectProjectionCollideX
+        
+    SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollideX
+        implicit none
+        real, dimension(3) :: A1 = (/5,0,-1/)
+        real, dimension(3) :: A2 = (/5,0,1/)
+        real, dimension(3) :: B1 = (/2,0,-1/)
+        real, dimension(3) :: B2 = (/2,0,1/)
+        logical :: val
+        
+        val = LineLineIntersectionCalculation(A1,A2,B1,B2)
+        if (val .NEQV. .FALSE.) then
+            print*, "FAILURE: failed LineLineIntersectionTestIntersectProjectionNoCollideX"
+            stop
+        endif
+
+    END SUBROUTINE LineLineIntersectionTestIntersectProjectionNoCollideX
 
 END MODULE LineLineIntersection
 
@@ -415,7 +477,9 @@ PROGRAM LineLineTest
       LineLineIntersectionTestParallelA1B1, LineLineIntersectionTestParallelA1B2, LineLineIntersectionTestParallelA2B1, &
       LineLineIntersectionTestParallelA2B2, LineLineIntersectionTestIntersectA1, LineLineIntersectionTestIntersectA2, &
       LineLineIntersectionTestIntersectB1, LineLineIntersectionTestIntersectB2, LineLineIntersectionTestIntersectMiddle, &
-      LineLineIntersectionTestIntersectProjectionCollide, LineLineIntersectionTestIntersectProjectionNoCollide
+      LineLineIntersectionTestIntersectProjectionCollideZ, LineLineIntersectionTestIntersectProjectionNoCollideZ, &
+      LineLineIntersectionTestIntersectProjectionCollideY, LineLineIntersectionTestIntersectProjectionNoCollideY, &
+      LineLineIntersectionTestIntersectProjectionCollideX, LineLineIntersectionTestIntersectProjectionNoCollideX
     implicit none
 
     call LineLineIntersectionTestOverlapA1B1()
@@ -436,9 +500,13 @@ PROGRAM LineLineTest
     call LineLineIntersectionTestIntersectB1()
     call LineLineIntersectionTestIntersectB2()
     call LineLineIntersectionTestIntersectMiddle()
-    call LineLineIntersectionTestIntersectProjectionCollide()
-    call LineLineIntersectionTestIntersectProjectionNoCollide()
+    call LineLineIntersectionTestIntersectProjectionCollideZ()
+    call LineLineIntersectionTestIntersectProjectionNoCollideZ()
+    call LineLineIntersectionTestIntersectProjectionCollideY()
+    call LineLineIntersectionTestIntersectProjectionNoCollideY()
+    call LineLineIntersectionTestIntersectProjectionCollideX()
+    call LineLineIntersectionTestIntersectProjectionNoCollideX()
 
-    print*, "SUCCESS: successful completion of all 20 line-line collision unit tests"
+    print*, "SUCCESS: successful completion of all 24 line-line collision unit tests"
 
 END PROGRAM
