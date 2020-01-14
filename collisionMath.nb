@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      1982,         71]
-NotebookOptionsPosition[      1423,         51]
-NotebookOutlinePosition[      1778,         67]
-CellTagsIndexPosition[      1735,         64]
+NotebookDataLength[      2221,         75]
+NotebookOptionsPosition[      1660,         55]
+NotebookOutlinePosition[      2015,         71]
+CellTagsIndexPosition[      1972,         68]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -35,16 +35,20 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  "line-line intersection ",
- StyleBox["(http://paulbourke.net/geometry/pointlineplane/)",
+ StyleBox["(http://paulbourke.net/geometry/pointlineplane/)\nThis method \
+finds the shortest line segment that connects 2 3D line segments by \
+projecting them into a plane and by then finding the closest points between \
+the two lines. Thus, this ",
   FontSize->14]
 }], "Subchapter",
- CellChangeTimes->{{3.788002967217609*^9, 
-  3.788003017485512*^9}},ExpressionUUID->"86ee10e5-6599-4073-96ed-\
+ CellChangeTimes->{{3.788002967217609*^9, 3.788003017485512*^9}, {
+  3.788005784725176*^9, 
+  3.788005867333912*^9}},ExpressionUUID->"86ee10e5-6599-4073-96ed-\
 21eb01586f8d"],
 
 Cell[BoxData[""], "Input",
  CellChangeTimes->{{3.788003000234591*^9, 
-  3.7880030017744293`*^9}},ExpressionUUID->"d54a9c39-cee0-4108-ae2b-\
+  3.788003026726563*^9}},ExpressionUUID->"d54a9c39-cee0-4108-ae2b-\
 8437c18fc434"]
 }, Open  ]]
 }, Open  ]]
@@ -69,8 +73,8 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 368, 9, 98, "Title",ExpressionUUID->"e7e0df4c-ebdb-42da-9bf5-f5158f4df2d5"],
 Cell[CellGroupData[{
-Cell[973, 35, 265, 7, 65, "Subchapter",ExpressionUUID->"86ee10e5-6599-4073-96ed-21eb01586f8d"],
-Cell[1241, 44, 154, 3, 30, "Input",ExpressionUUID->"d54a9c39-cee0-4108-ae2b-8437c18fc434"]
+Cell[973, 35, 504, 11, 102, "Subchapter",ExpressionUUID->"86ee10e5-6599-4073-96ed-21eb01586f8d"],
+Cell[1480, 48, 152, 3, 30, "Input",ExpressionUUID->"d54a9c39-cee0-4108-ae2b-8437c18fc434"]
 }, Open  ]]
 }, Open  ]]
 }
