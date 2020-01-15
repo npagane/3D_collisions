@@ -15,14 +15,14 @@ MODULE SphereSphereIntersection
         real, intent(in), dimension(3) :: B1
         real, intent(in) :: rb
         real, parameter :: dist = 1.0e-5 ! tolerance for collision (should be small)
-        logical SphereSphereIntersectionCalculation
+        integer SphereSphereIntersectionCalculation
 
         ! default value (i.e. no intersection)
-        SphereSphereIntersectionCalculation = .FALSE.
+        SphereSphereIntersectionCalculation = 0
 
         ! see if radii overalp
         if ( sqrt(dot_product(A1-B1, A1-B1)) - (ra+rb) < dist ) then
-            SphereSphereIntersectionCalculation = .TRUE.
+            SphereSphereIntersectionCalculation = 1
             !print*, "sphere collision"
             return
         endif
@@ -37,10 +37,10 @@ MODULE SphereSphereIntersection
         real :: ra = 2
         real, dimension(3) :: B1 = (/0.0,0.0,0.0/)
         real :: rb = 20.0
-        logical val
+        integer val
     
         val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestAinB"
             stop
         endif
@@ -53,10 +53,10 @@ MODULE SphereSphereIntersection
         real :: ra = 20
         real, dimension(3) :: B1 = (/0.0,0.0,0.0/)
         real :: rb = 2
-        logical val
+        integer val
     
         val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestBinA"
             stop
         endif
@@ -69,10 +69,10 @@ MODULE SphereSphereIntersection
         real :: ra = 1
         real, dimension(3) :: B1 = (/3.0,0.0,0.0/)
         real :: rb = 1
-        logical val
+        integer val
     
         val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestTangent"
             stop
         endif
@@ -85,10 +85,10 @@ MODULE SphereSphereIntersection
         real :: ra = 1
         real, dimension(3) :: B1 = (/3.0,0.0,0.0/)
         real :: rb = 1
-        logical val
+        integer val
     
         val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestOverlap"
             stop 
         endif
@@ -101,10 +101,10 @@ MODULE SphereSphereIntersection
         real :: ra = 1
         real, dimension(3) :: B1 = (/3.0,0.0,0.0/)
         real :: rb = 0.99
-        logical val
+        integer val
    
         val = SphereSphereIntersectionCalculation(A1, ra, B1, rb)
-        if (val .NEQV. .FALSE.) then
+        if (val == 1) then
             print*, "FAILURE: failed LineLineIntersectionTestNoOverlap"
             stop
         endif

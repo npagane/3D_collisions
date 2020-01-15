@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      2221,         75]
-NotebookOptionsPosition[      1660,         55]
-NotebookOutlinePosition[      2015,         71]
-CellTagsIndexPosition[      1972,         68]
+NotebookDataLength[      6658,        189]
+NotebookOptionsPosition[      5895,        167]
+NotebookOutlinePosition[      6250,        183]
+CellTagsIndexPosition[      6207,        180]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -34,23 +34,135 @@ Cell[TextData[{
 Cell[CellGroupData[{
 
 Cell[TextData[{
- "line-line intersection ",
+ StyleBox["line-line intersection",
+  FontSize->24],
+ StyleBox[" ",
+  FontSize->36],
  StyleBox["(http://paulbourke.net/geometry/pointlineplane/)\nThis method \
 finds the shortest line segment that connects 2 3D line segments by \
-projecting them into a plane and by then finding the closest points between \
-the two lines. Thus, this ",
+projecting them onto a plane and by then finding the closest points between \
+the two lines. Thus, this method need is good for finding intersections in \
+most typical cases, but for point overlap and for parallel lines (both \
+coincident and non-intersecting) need to be checked for in practice. Note \
+that DNA linkers are not typical line segments since they are STIFF! That\
+\[CloseCurlyQuote]s why checking for parallel non-coincident lines is the \
+most important check.",
   FontSize->14]
 }], "Subchapter",
  CellChangeTimes->{{3.788002967217609*^9, 3.788003017485512*^9}, {
-  3.788005784725176*^9, 
-  3.788005867333912*^9}},ExpressionUUID->"86ee10e5-6599-4073-96ed-\
+  3.788005784725176*^9, 3.788005867333912*^9}, {3.788006270717683*^9, 
+  3.788006349375668*^9}, {3.788009652162648*^9, 
+  3.78800970705623*^9}},ExpressionUUID->"86ee10e5-6599-4073-96ed-\
 21eb01586f8d"],
 
-Cell[BoxData[""], "Input",
- CellChangeTimes->{{3.788003000234591*^9, 
-  3.788003026726563*^9}},ExpressionUUID->"d54a9c39-cee0-4108-ae2b-\
-8437c18fc434"]
-}, Open  ]]
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"PaX", " ", "=", " ", 
+   RowBox[{"A1X", " ", "+", " ", 
+    RowBox[{"muA", "*", 
+     RowBox[{"(", 
+      RowBox[{"A2X", "-", "A1X"}], ")"}]}]}]}], ";", " ", 
+  RowBox[{"PbX", " ", "=", " ", 
+   RowBox[{"B1X", " ", "+", " ", 
+    RowBox[{"muB", "*", 
+     RowBox[{"(", 
+      RowBox[{"B2X", "-", "B1X"}], ")"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PaY", " ", "=", " ", 
+   RowBox[{"A1Y", " ", "+", " ", 
+    RowBox[{"muA", "*", 
+     RowBox[{"(", 
+      RowBox[{"A2Y", "-", "A1Y"}], ")"}]}]}]}], ";", " ", 
+  RowBox[{"PbY", " ", "=", " ", 
+   RowBox[{"B1Y", " ", "+", " ", 
+    RowBox[{"muB", "*", 
+     RowBox[{"(", 
+      RowBox[{"B2Y", "-", "B1Y"}], ")"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PaZ", " ", "=", " ", 
+   RowBox[{"A1Z", " ", "+", " ", 
+    RowBox[{"muA", "*", 
+     RowBox[{"(", 
+      RowBox[{"A2Z", "-", "A1Z"}], ")"}]}]}]}], ";", " ", 
+  RowBox[{"PbZ", " ", "=", " ", 
+   RowBox[{"B1Z", " ", "+", " ", 
+    RowBox[{"muB", "*", 
+     RowBox[{"(", 
+      RowBox[{"B2Z", "-", "B1Z"}], ")"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Factor", "[", 
+  RowBox[{"Solve", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"Dot", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"PaX", ",", " ", "PaY", ",", " ", "PaZ"}], "}"}], "-", 
+         RowBox[{"{", 
+          RowBox[{"PbX", ",", " ", "PbY", ",", " ", "PbZ"}], "}"}]}], ",", 
+        " ", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"A2X", ",", " ", "A2Y", ",", " ", "A2Z"}], "}"}], "-", 
+         RowBox[{"{", 
+          RowBox[{"A1X", ",", " ", "A1Y", ",", " ", "A1Z"}], "}"}]}]}], "]"}],
+       "\[Equal]", "0"}], " ", "&&", " ", 
+     RowBox[{
+      RowBox[{"Dot", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"PaX", ",", " ", "PaY", ",", " ", "PaZ"}], "}"}], "-", 
+         RowBox[{"{", 
+          RowBox[{"PbX", ",", " ", "PbY", ",", " ", "PbZ"}], "}"}]}], ",", 
+        " ", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"B2X", ",", " ", "B2Y", ",", " ", "B2Z"}], "}"}], "-", 
+         RowBox[{"{", 
+          RowBox[{"B1X", ",", " ", "B1Y", ",", " ", "B1Z"}], "}"}]}]}], "]"}],
+       "\[Equal]", "0"}]}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"muA", ",", " ", "muB"}], "}"}]}], "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.788003000234591*^9, 3.788003026726563*^9}, {
+  3.788006400047576*^9, 3.7880065057305393`*^9}, {3.7880065541872463`*^9, 
+  3.788006558168025*^9}, {3.788006603171606*^9, 3.788006609141099*^9}, {
+  3.788006682742049*^9, 3.7880067022463503`*^9}, {3.788006741196081*^9, 
+  3.788006775303933*^9}, {3.788006946226797*^9, 3.788006947517742*^9}, {
+  3.788007025257628*^9, 3.7880070800104103`*^9}, {3.788007145642439*^9, 
+  3.78800716989747*^9}, {3.788007202186429*^9, 3.7880072991716146`*^9}, {
+  3.788007339189434*^9, 3.788007354692141*^9}, {3.788007460836444*^9, 
+  3.788007465514945*^9}, {3.788007567408264*^9, 3.788007570309051*^9}},
+ CellLabel->"In[72]:=",ExpressionUUID->"d54a9c39-cee0-4108-ae2b-8437c18fc434"]
+}, Open  ]],
+
+Cell[TextData[{
+ StyleBox["sphere-line intersection",
+  FontSize->24],
+ StyleBox[" (http://paulbourke.net/geometry/pointlineplane/)\nThis method \
+finds the intersection point of a line and sphere. ",
+  FontSize->14]
+}], "Subchapter",
+ CellChangeTimes->{{3.7880097455283823`*^9, 3.788009761741041*^9}, {
+  3.788009799756744*^9, 
+  3.788009923989728*^9}},ExpressionUUID->"30998fd5-60f4-4a3f-b556-\
+914ad7418ffc"],
+
+Cell[TextData[{
+ StyleBox["sphere-sphere intersection",
+  FontSize->24],
+ StyleBox[" \nThis method is almost trivial.",
+  FontSize->14],
+ "\n"
+}], "Subchapter",
+ CellChangeTimes->{{3.788009859344531*^9, 3.7880098658430777`*^9}, {
+  3.788009926015237*^9, 
+  3.78800994821148*^9}},ExpressionUUID->"208e8653-0a9b-4bb4-a7b7-\
+5898e8b94969"]
 }, Open  ]]
 },
 WindowSize->{803, 899},
@@ -73,9 +185,11 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[580, 22, 368, 9, 98, "Title",ExpressionUUID->"e7e0df4c-ebdb-42da-9bf5-f5158f4df2d5"],
 Cell[CellGroupData[{
-Cell[973, 35, 504, 11, 102, "Subchapter",ExpressionUUID->"86ee10e5-6599-4073-96ed-21eb01586f8d"],
-Cell[1480, 48, 152, 3, 30, "Input",ExpressionUUID->"d54a9c39-cee0-4108-ae2b-8437c18fc434"]
-}, Open  ]]
+Cell[973, 35, 1027, 20, 169, "Subchapter",ExpressionUUID->"86ee10e5-6599-4073-96ed-21eb01586f8d"],
+Cell[2003, 57, 3111, 82, 157, "Input",ExpressionUUID->"d54a9c39-cee0-4108-ae2b-8437c18fc434"]
+}, Open  ]],
+Cell[5129, 142, 411, 10, 78, "Subchapter",ExpressionUUID->"30998fd5-60f4-4a3f-b556-914ad7418ffc"],
+Cell[5543, 154, 336, 10, 99, "Subchapter",ExpressionUUID->"208e8653-0a9b-4bb4-a7b7-5898e8b94969"]
 }, Open  ]]
 }
 ]

@@ -17,10 +17,10 @@ MODULE SphereLineIntersection
         real, intent(in), dimension(3) :: B1
         real, intent(in) :: r
         real :: a, b, c, discr, um, up ! quadratic variables
-        logical SphereLineIntersectionCalculation
+        integer SphereLineIntersectionCalculation
 
         ! default value (i.e. no intersection)
-        SphereLineIntersectionCalculation = .FALSE.
+        SphereLineIntersectionCalculation = 0
 
         ! calculate discriminant
         a = dot_product(A2-A1, A2-A1)
@@ -33,11 +33,11 @@ MODULE SphereLineIntersection
         up = (-b + sqrt(discr))/(2*a)
         um = (-b - sqrt(discr))/(2*a)
         if ((um > 1 .AND. up < 0) .OR. (um < 0 .AND. up > 1)) then 
-            SphereLineIntersectionCalculation = .TRUE.
+            SphereLineIntersectionCalculation = 1
             !print*, "line in sphere"
             return
         else if ((um >= 0 .AND. um <= 1) .OR. (up >= 0 .AND. up <= 1)) then 
-            SphereLineIntersectionCalculation = .TRUE.
+            SphereLineIntersectionCalculation = 1
             !print*, "one or more intersections"
             return
         endif
@@ -52,10 +52,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/-2,0,0/)
         real, dimension(3) :: B1 = (/0,0,0/)
         real :: r = 20.0
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineInside"
             stop
         endif
@@ -68,10 +68,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/-1,0,0/)
         real, dimension(3) :: B1 = (/0,0,0/)
         real :: r = 2
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineInsideEdgeA1"
             stop
         endif
@@ -84,10 +84,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/-2,0,0/)
         real, dimension(3) :: B1 = (/0,0,0/)
         real :: r = 2
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineInsideEdgeA2"
             stop
         endif
@@ -100,10 +100,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/1,0,0/)
         real, dimension(3) :: B1 = (/0,0,0/)
         real :: r = 1
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineTangent"
             stop
         endif
@@ -116,10 +116,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/2,0,0/)
         real, dimension(3) :: B1 = (/0,0,0/)
         real :: r = 1
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineOutsideA1"
             stop
         endif
@@ -132,10 +132,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/3,0,0/)
         real, dimension(3) :: B1 = (/1,0,0/)
         real :: r = 2
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineOutsideA2"
             stop
         endif
@@ -148,10 +148,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/-5,0,0/)
         real, dimension(3) :: B1 = (/0,0,0/)
         real :: r = 1
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .TRUE.) then
+        if (val == 0) then
             print*, "FAILURE: failed LineLineIntersectionTestLineOutsideBoth"
             stop
         endif
@@ -165,10 +165,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/11.001,0.0,0.0/)
         real, dimension(3) :: B1 = (/10,10,10/)
         real :: r = 1
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .FALSE.) then
+        if (val == 1) then
             print*, "FAILURE: failed LineLineIntersectionTestLineCloseA1"
             stop
         endif
@@ -181,10 +181,10 @@ MODULE SphereLineIntersection
         real, dimension(3) :: A2 = (/-50.003,0.0,0.0/)
         real, dimension(3) :: B1 = (/-10,-10,-10/)
         real :: r = 40
-        logical val
+        integer val
 
         val = SphereLineIntersectionCalculation(A1, A2, B1, r)
-        if (val .NEQV. .FALSE.) then
+        if (val == 1) then
             print*, "FAILURE: failed LineLineIntersectionTestLineOutsideA2"
             stop
         endif
