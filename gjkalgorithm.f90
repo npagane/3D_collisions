@@ -96,7 +96,7 @@ MODULE GJKAlgorithm
                 bout = aout 
                 v = acp
             else 
-                flag = 1
+                flag = i
                 exit
             endif
             aout = support(s2x, s2y, s2z, s1x, s1y, s1z, nVerts, v)
@@ -166,7 +166,7 @@ MODULE GJKAlgorithm
                         ab = ad
                         abc = adb
                     else
-                        flag = 1
+                        flag = i
                         exit
                     endif
                 endif
@@ -199,10 +199,7 @@ MODULE GJKAlgorithm
 
         ! find the furthest data point in v direction in shape s
         mag = sx*v(1) + sy*v(2) + sz*v(3)
-        !print*, 'mag', mag
         maxInd = maxloc(mag)
-        !print*, 'ind', maxInd
-        print*,  (/sx(maxInd(1)), sy(maxInd(1)), sz(maxInd(1))/)
         getExtremaPoint = (/sx(maxInd(1)), sy(maxInd(1)), sz(maxInd(1))/)
 
     END FUNCTION getExtremaPoint
@@ -233,13 +230,17 @@ MODULE GJKAlgorithm
 
     SUBROUTINE test()
         implicit none
-        integer :: nVerts = 4
-        real, dimension(4) :: s1x = (/0, 1, 1, 0/)
-        real, dimension(4) :: s1y = (/0, 0, 1, 1/)
-        real, dimension(4) :: s1z = (/1, 0, 0, 1/)
-        real, dimension(4) :: s2x = (/0, 1, 1, 0/)
-        real, dimension(4) :: s2y = (/0, 0, 1, 1/)
-        real, dimension(4) :: s2z = (/2, 0, 0, 1/)
+        integer :: nVerts = 12
+        real, dimension(12) :: s1x = (/ 4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972, & 
+                                      4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972/)
+        real, dimension(12) :: s1y = (/2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75, &
+                                      2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75/)
+        real, dimension(12) :: s1z = (/0.,0.,0.,0.,0.,0.,-3.,-3.,-3.,-3.,-3.,-3./)
+        real, dimension(12) :: s2x = (/ 4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972, &
+                                      4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972/)
+        real, dimension(12) :: s2y = (/2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75, &            
+                                      2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75/)
+        real, dimension(12) :: s2z = (/1.,1.,1.,1.,1.,1.,-3.,-3.,-3.,-3.,-3.,-3./)
         integer res
 
         res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
@@ -256,6 +257,6 @@ PROGRAM GJKTest
 
     call test()
 
-    print*, "SUCCESS: successful completion of all GJK collision unit tests"
+    !print*, "SUCCESS: successful completion of all GJK collision unit tests"
 
 END PROGRAM
