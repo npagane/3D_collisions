@@ -19,6 +19,12 @@ MODULE GJKAlgorithm
         ! default value (i.e. no intersection)
         GJK = 0
 
+        ! check for shape overlap
+        if ( sum(s2x-s1x) + sum(s2y-s1y) + sum(s2z-s1z) == 0 ) then 
+           GJK = iteration
+           return
+        endif
+
         ! line segment
         call pickLine(s1x, s1y, s1z, s2x, s2y, s2z, nVerts, v, a, b)
 
@@ -96,7 +102,7 @@ MODULE GJKAlgorithm
                 bout = aout 
                 v = acp
             else 
-                flag = i
+                flag = 1
                 exit
             endif
             aout = support(s2x, s2y, s2z, s1x, s1y, s1z, nVerts, v)
@@ -137,10 +143,6 @@ MODULE GJKAlgorithm
             bout = aout
             v = abc
             aout = support(s2x, s2y, s2z, s1x, s1y, s1z, nVerts, v)
-        else if (dot == 0) then
-            ! shape overlap
-            flag = iteration
-            return ! quit early
         else
             dout = bout
             bout = aout
@@ -234,7 +236,7 @@ MODULE GJKAlgorithm
 
     END FUNCTION cross
 
-    SUBROUTINE test()
+    SUBROUTINE sameShapeTest()
         implicit none
         integer :: nVerts = 12
         real, dimension(12) :: s1x = (/ 4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972, & 
@@ -246,23 +248,255 @@ MODULE GJKAlgorithm
                                       4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972/)
         real, dimension(12) :: s2y = (/2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75, &            
                                       2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75/)
-        real, dimension(12) :: s2z = (/1.,0.,0.,0.,0.,0.,-3.,-3.,-3.,-3.,-3.,-3./)
+        real, dimension(12) :: s2z = (/0.,0.,0.,0.,0.,0.,-3.,-3.,-3.,-3.,-3.,-3./)
         integer res
 
         res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
-        print*, res
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: sameShapeTest"
+            !stop
+        endif
 
-    END SUBROUTINE test
+    END SUBROUTINE sameShapeTest
+
+    SUBROUTINE noIntersectX()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1x = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1y = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2x = (/ 4.5000,    4.0000,    4.5000,    5.5000,    6.0000,    5.5000, &
+                                      4.5000,    4.0000,    4.5000,    5.5000,    6.0000,    5.5000/)
+        real, dimension(12) :: s2y = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res > 0 ) then
+            print*, "failed test: noIntersectX"
+            stop
+        endif
+
+    END SUBROUTINE noIntersectX
+
+    SUBROUTINE intersectX()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1x = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1y = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2x = (/ .5000,    0.000,    .5000,    1.5000,    2.0000,    1.5000, &
+                                      .5000,    0.000,    .5000,    1.5000,    2.0000,    1.5000/)
+        real, dimension(12) :: s2y = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: intersectX"
+            stop
+        endif
+
+    END SUBROUTINE intersectX
+
+    SUBROUTINE tangentX()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1x = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1y = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2x = (/ 1.5000,    1.000,    1.5000,    2.5000,    3.0000,    2.5000, &
+                                      1.5000,    1.000,    1.5000,    2.5000,    3.0000,    2.5000/)
+        real, dimension(12) :: s2y = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: tangentX"
+            stop
+        endif
+
+    END SUBROUTINE tangentX
+
+    SUBROUTINE noIntersectY()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1y = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2y = (/ 4.5000,    4.0000,    4.5000,    5.5000,    6.0000,    5.5000, &
+                                      4.5000,    4.0000,    4.5000,    5.5000,    6.0000,    5.5000/)
+        real, dimension(12) :: s2x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res > 0 ) then
+            print*, "failed test: noIntersectY"
+            stop
+        endif
+
+    END SUBROUTINE noIntersectY
+
+    SUBROUTINE intersectY()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1y = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2y = (/ .5000,    0.000,    .5000,    1.5000,    2.0000,    1.5000, &
+                                      .5000,    0.000,    .5000,    1.5000,    2.0000,    1.5000/)
+        real, dimension(12) :: s2x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+ 
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: intersectY"
+            stop
+        endif
+
+    END SUBROUTINE intersectY
+ 
+    SUBROUTINE tangentY()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1y = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2y = (/ 1.5000,    1.000,    1.5000,    2.5000,    3.0000,    2.5000, &
+                                      1.5000,    1.000,    1.5000,    2.5000,    3.0000,    2.5000/)
+        real, dimension(12) :: s2x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2z = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: tangentY"
+            stop
+        endif
+
+    END SUBROUTINE tangentY
+
+    SUBROUTINE noIntersectZ()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1z = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1y = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2z = (/ 4.5000,    4.0000,    4.5000,    5.5000,    6.0000,    5.5000, &
+                                      4.5000,    4.0000,    4.5000,    5.5000,    6.0000,    5.5000/)
+        real, dimension(12) :: s2x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2y = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res > 0 ) then
+            print*, "failed test: noIntersectZ"
+            stop
+        endif
+
+    END SUBROUTINE noIntersectZ
+
+    SUBROUTINE intersectZ()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1z = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1y = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2z = (/ .5000,    0.000,    .5000,    1.5000,    2.0000,    1.5000, &
+                                      .5000,    0.000,    .5000,    1.5000,    2.0000,    1.5000/)
+        real, dimension(12) :: s2x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2y = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: intersectZ"
+            stop
+        endif
+
+    END SUBROUTINE intersectZ
+
+    SUBROUTINE tangentZ()
+        implicit none
+        integer :: nVerts = 12
+        real, dimension(12) :: s1z = (/-0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000, &
+                                      -0.5000,   -1.0000,   -0.5000,    0.5000,    1.0000,    0.5000/)
+        real, dimension(12) :: s1x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                     -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s1y = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        real, dimension(12) :: s2z = (/ 1.5000,    1.000,    1.5000,    2.5000,    3.0000,    2.5000, &
+                                      1.5000,    1.000,    1.5000,    2.5000,    3.0000,    2.5000/)
+        real, dimension(12) :: s2x = (/-0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660, &
+                                      -0.8660,         0.,    0.8660,    0.8660,         0.,   -0.8660/)
+        real, dimension(12) :: s2y = (/0., 0., 0., 0., 0., 0., 5.5, 5.5, 5.5, 5.5, 5.5, 5.5/)
+        integer res
+
+        res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
+        !print*, res
+        if (res == 0 ) then
+            print*, "failed test: tangentZ"
+            stop
+        endif
+
+    END SUBROUTINE tangentZ
+
 
 END MODULE
 
 ! test module
 PROGRAM GJKTest 
-    use GJKAlgorithm, only: GJK, test
+    use GJKAlgorithm, only: GJK, sameShapeTest, noIntersectX, intersectX, tangentX, &
+                            noIntersectY, intersectY, tangentY, &
+                            noIntersectZ, intersectZ, tangentZ
     implicit none
 
-    call test()
+    call sameShapeTest()
+    call noIntersectX()
+    call intersectX()
+    call tangentX()
+    call noIntersectY()
+    call intersectY()
+    call tangentY()
+    call noIntersectZ()
+    call intersectZ()
+    call tangentZ()
 
-    !print*, "SUCCESS: successful completion of all GJK collision unit tests"
+    print*, "SUCCESS: successful completion of all GJK collision unit tests"
 
 END PROGRAM
