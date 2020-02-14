@@ -30,7 +30,7 @@ MODULE GJKAlgorithm
         c = cout
 
         ! tetrahedron
-        if (GJK == 1) then 
+        if (GJK > 0) then 
             call pickTetrahedron(s1x, s1y, s1z, s2x, s2y, s2z, nVerts, a, b, c, &
                               aout, bout, cout, dout, GJK, iteration)
         endif
@@ -114,6 +114,7 @@ MODULE GJKAlgorithm
         integer, intent(out) :: flag ! success
         real, dimension(3), intent(out) :: aout, bout, cout, dout
         real, dimension(3) :: ab, ao, ac, ad, abc, acd, adb, v
+        real dot
         integer i
 
         ! default value (i.e. no success)
@@ -129,12 +130,17 @@ MODULE GJKAlgorithm
         ao = -1*aout
 
         ! check if simplex is above or below origin
-        if (dot_product(abc, ao) > 0) then 
+        dot = dot_product(abc, ao)
+        if (dot > 0) then 
             dout = cout
             cout = bout
             bout = aout
             v = abc
             aout = support(s2x, s2y, s2z, s1x, s1y, s1z, nVerts, v)
+        else if (dot == 0) then
+            ! shape overlap
+            flag = iteration
+            return ! quit early
         else
             dout = bout
             bout = aout
@@ -240,7 +246,7 @@ MODULE GJKAlgorithm
                                       4.76313972,  0. , -4.76313972, -4.76313972,  0. ,4.76313972/)
         real, dimension(12) :: s2y = (/2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75, &            
                                       2.75  ,  5.5,  2.75 , -2.75, -5.5,-2.75/)
-        real, dimension(12) :: s2z = (/1.,1.,1.,1.,1.,1.,-3.,-3.,-3.,-3.,-3.,-3./)
+        real, dimension(12) :: s2z = (/1.,0.,0.,0.,0.,0.,-3.,-3.,-3.,-3.,-3.,-3./)
         integer res
 
         res = GJK(s1x, s1y, s1z, s2x, s2y, s2z, nVerts)
